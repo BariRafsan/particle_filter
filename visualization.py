@@ -2,6 +2,7 @@ import matplotlib
 matplotlib.use("Qt5Agg")
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+from matplotlib.widgets import Button
 
 from config import WORLD_WIDTH, WORLD_HEIGHT, GROUND_LEVEL, DROP_START, DROP_END
 
@@ -9,11 +10,27 @@ from config import WORLD_WIDTH, WORLD_HEIGHT, GROUND_LEVEL, DROP_START, DROP_END
 class Visualizer:
 
     def __init__(self, simulation, particle_filter):
-        self.sim = simulation
-        self.pf  = particle_filter
+        self.sim    = simulation
+        self.pf     = particle_filter
+        self.paused = False
 
         self.fig, self.ax = plt.subplots(figsize=(11, 8))
+        self.fig.subplots_adjust(bottom=0.12)
         self.fig.suptitle("Particle Filter — Ball Tracking", fontsize=14, fontweight="bold")
+
+        btn_ax = self.fig.add_axes([0.46, 0.02, 0.1, 0.05])
+        self._btn = Button(btn_ax, "Pause")
+        self._btn.on_clicked(self._toggle_pause)
+
+    def _toggle_pause(self, event):
+        if self.paused:
+            self._anim.resume()
+            self._btn.label.set_text("Pause")
+        else:
+            self._anim.pause()
+            self._btn.label.set_text("Play")
+        self.paused = not self.paused
+        self.fig.canvas.draw_idle()
 
     def animate(self):
         total_steps = len(self.sim.observation_history)
@@ -21,7 +38,6 @@ class Visualizer:
             self.fig, self._draw,
             frames=total_steps, interval=40, repeat=False,
         )
-        plt.tight_layout()
         plt.show()
 
     def _draw(self, frame):
