@@ -1,0 +1,10 @@
+{
+  "pythonVersion": "3.12",
+  "venv": "portfolio2-sSy8ALfv-py3.12",
+  "venvPath": "/home/rafsan/.cache/pypoetry/virtualenvs",
+  "executionEnvironments": [
+    {
+      "root": "."
+    }
+  ]
+}
