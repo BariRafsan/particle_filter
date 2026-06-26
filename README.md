@@ -1,8 +1,6 @@
 # Portfolio Exam 2 — Particle Filter / Sensor Fusion
 
 **Course:** Reasoning and Decision Making under Uncertainty
-**University:** TH Würzburg-Schweinfurt
-**Due:** 26.06.2026
 
 ---
 
