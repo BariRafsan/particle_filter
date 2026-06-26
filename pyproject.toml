@@ -6,7 +6,8 @@ name = "portfolio2"
 version = "0.1.0"
 description = "Particle Filter Sensor Fusion - Portfolio Exam 2"
 authors = [
-    {name = "Rafsan",email = "shafinrafsan46@gmail.com"}
+    {name = "Rafsan Bari Shafin",email = "shafinrafsan46@gmail.com"},
+    {name = "Israt Jahan",email = "isratjahan2022416@gmail.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.12"
