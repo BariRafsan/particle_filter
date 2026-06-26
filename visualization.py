@@ -1,4 +1,5 @@
 import matplotlib
+
 matplotlib.use("Qt5Agg")
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -10,13 +11,15 @@ from config import WORLD_WIDTH, WORLD_HEIGHT, GROUND_LEVEL, DROP_START, DROP_END
 class Visualizer:
 
     def __init__(self, simulation, particle_filter):
-        self.sim    = simulation
-        self.pf     = particle_filter
+        self.sim = simulation
+        self.pf = particle_filter
         self.paused = False
 
         self.fig, self.ax = plt.subplots(figsize=(11, 8))
         self.fig.subplots_adjust(bottom=0.12)
-        self.fig.suptitle("Particle Filter — Ball Tracking", fontsize=14, fontweight="bold")
+        self.fig.suptitle(
+            "Particle Filter — Ball Tracking", fontsize=14, fontweight="bold"
+        )
 
         btn_ax = self.fig.add_axes([0.46, 0.02, 0.1, 0.05])
         self._btn = Button(btn_ax, "Pause")
@@ -35,8 +38,11 @@ class Visualizer:
     def animate(self):
         total_steps = len(self.sim.observation_history)
         self._anim = FuncAnimation(
-            self.fig, self._draw,
-            frames=total_steps, interval=40, repeat=False,
+            self.fig,
+            self._draw,
+            frames=total_steps,
+            interval=40,
+            repeat=False,
         )
         plt.show()
 
@@ -50,22 +56,43 @@ class Visualizer:
         self.ax.axhline(y=GROUND_LEVEL, color="black", linewidth=2, label="Ground")
 
         observations = self.sim.observation_history[frame]
-        truth        = self.sim.true_history[frame]
+        truth = self.sim.true_history[frame]
 
         self.pf.step(observations)
 
         positions = self.pf.particle_positions()
-        self.ax.scatter(positions[:, 0], positions[:, 1],
-                        s=3, c="gray", alpha=0.2, label="Particles", zorder=1)
+        self.ax.scatter(
+            positions[:, 0],
+            positions[:, 1],
+            s=3,
+            c="gray",
+            alpha=0.2,
+            label="Particles",
+            zorder=1,
+        )
 
         if truth:
-            self.ax.scatter([b[0] for b in truth], [b[1] for b in truth],
-                            s=120, c="green", marker="o", zorder=4, label="True position")
+            self.ax.scatter(
+                [b[0] for b in truth],
+                [b[1] for b in truth],
+                s=120,
+                c="green",
+                marker="o",
+                zorder=4,
+                label="True position",
+            )
 
         if observations:
-            self.ax.scatter([o[0] for o in observations], [o[1] for o in observations],
-                            s=200, c="royalblue", marker="+", linewidths=2,
-                            zorder=3, label="Observation")
+            self.ax.scatter(
+                [o[0] for o in observations],
+                [o[1] for o in observations],
+                s=200,
+                c="royalblue",
+                marker="+",
+                linewidths=2,
+                zorder=3,
+                label="Observation",
+            )
 
         estimates = self.pf.estimate()
         for est in estimates:
@@ -83,7 +110,7 @@ class Visualizer:
             self.ax.scatter([], [], s=200, c="red", marker="X", label="Estimate")
 
         sensor_status = "DROPOUT" if DROP_START <= frame <= DROP_END else "OK"
-        ess           = self.pf.effective_sample_size()
+        ess = self.pf.effective_sample_size()
         self.ax.set_title(
             f"Step: {frame:4d}   Sensor: {sensor_status}   "
             f"ESS: {ess:.0f}   Balls detected: {len(estimates)}",
